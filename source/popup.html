@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTimer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            width: 350px;
+            min-height: 400px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            margin: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 16px 20px;
+            text-align: center;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .main {
+            padding: 24px 20px;
+        }
+        
+        .timer-display {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .time {
+            font-size: 48px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .mode {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #e0e0e0;
+            transform: translateY(-1px);
+        }
+        
+        .stats {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🍅 FlowTimer</h1>
+        </div>
+        
+        <div class="main">
+            <div class="timer-display">
+                <div class="time" id="timeDisplay">25:00</div>
+                <div class="mode">专注时间</div>
+            </div>
+            
+            <div class="controls">
+                <button id="playPauseBtn" class="btn btn-primary">▶️ 开始</button>
+                <button id="resetBtn" class="btn btn-secondary">🔄 重置</button>
+            </div>
+            
+            <div class="stats">
+                专注工作，高效生活
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

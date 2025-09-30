@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "FlowTimer",
+  "version": "1.0.0",
+  "description": "一款专为提升注意力和生产力而设计的番茄钟浏览器插件",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FlowTimer - 专注工作，高效生活"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
