@@ -1,17 +1,14 @@
 /**
- * 极简版 FlowTimer
- * 只实现最基本的番茄钟功能
+ * FlowTimer 弹窗界面控制器
+ * 与后台脚本通信，维持定时器状态
  */
 class SimpleFlowTimer {
     constructor() {
         this.isRunning = false;
         this.isPaused = false;
-        this.timeLeft = 25 * 60; // 25分钟
+        this.timeLeft = 25 * 60;
         this.totalTime = 25 * 60;
-        this.intervalId = null;
-        this.currentMode = 'work'; // 'work' 或 'break'
-        
-        // 默认设置
+        this.currentMode = 'work';
         this.settings = {
             workTime: 25,
             breakTime: 5
@@ -21,10 +18,36 @@ class SimpleFlowTimer {
     }
     
     async init() {
-        await this.loadSettings();
+        await this.loadState();
         this.updateDisplay();
         this.updateButtons();
         this.bindEvents();
+        this.startUIUpdate();
+    }
+    
+    async loadState() {
+        try {
+            const response = await this.sendMessage({ type: 'GET_STATE' });
+            if (response.success) {
+                const state = response.state;
+                this.isRunning = state.isRunning;
+                this.isPaused = state.isPaused;
+                this.timeLeft = state.timeLeft;
+                this.totalTime = state.totalTime;
+                this.currentMode = state.currentMode;
+                this.settings = state.settings;
+            }
+        } catch (error) {
+            console.error('加载状态失败:', error);
+        }
+    }
+    
+    sendMessage(message) {
+        return new Promise((resolve) => {
+            chrome.runtime.sendMessage(message, (response) => {
+                resolve(response || { success: false });
+            });
+        });
     }
     
     bindEvents() {
@@ -45,68 +68,50 @@ class SimpleFlowTimer {
         });
     }
     
-    togglePlayPause() {
+    async togglePlayPause() {
         if (this.isRunning) {
-            this.pause();
+            await this.pause();
         } else {
-            this.start();
+            await this.start();
         }
     }
     
-    start() {
-        if (!this.isRunning) {
+    async start() {
+        const response = await this.sendMessage({ type: 'START_TIMER' });
+        if (response.success) {
             this.isRunning = true;
             this.isPaused = false;
-            
-            this.intervalId = setInterval(() => {
-                this.tick();
-            }, 1000);
-            
             this.updateButtons();
         }
     }
     
-    pause() {
-        if (this.isRunning) {
+    async pause() {
+        const response = await this.sendMessage({ type: 'PAUSE_TIMER' });
+        if (response.success) {
             this.isRunning = false;
             this.isPaused = true;
-            clearInterval(this.intervalId);
             this.updateButtons();
         }
     }
     
-    reset() {
-        this.isRunning = false;
-        this.isPaused = false;
-        clearInterval(this.intervalId);
-        this.setMode(this.currentMode);
-        this.updateDisplay();
-        this.updateButtons();
-    }
-    
-    tick() {
-        if (this.timeLeft > 0) {
-            this.timeLeft--;
+    async reset() {
+        const response = await this.sendMessage({ type: 'RESET_TIMER' });
+        if (response.success) {
+            this.isRunning = false;
+            this.isPaused = false;
+            await this.loadState();
             this.updateDisplay();
-        } else {
-            this.completeSession();
+            this.updateButtons();
         }
     }
     
-    completeSession() {
-        this.isRunning = false;
-        clearInterval(this.intervalId);
-        
-        if (this.currentMode === 'work') {
-            alert('专注时间结束！开始休息时间。');
-            this.setMode('break');
-        } else {
-            alert('休息时间结束！准备开始下一轮专注工作。');
-            this.setMode('work');
-        }
-        
-        this.updateDisplay();
-        this.updateButtons();
+    startUIUpdate() {
+        // 每秒更新一次界面显示
+        this.intervalId = setInterval(async () => {
+            await this.loadState();
+            this.updateDisplay();
+            this.updateButtons();
+        }, 1000);
     }
     
     updateDisplay() {
@@ -132,31 +137,6 @@ class SimpleFlowTimer {
         }
     }
     
-    setMode(mode) {
-        this.currentMode = mode;
-        
-        if (mode === 'work') {
-            this.timeLeft = this.settings.workTime * 60;
-            this.totalTime = this.settings.workTime * 60;
-        } else {
-            this.timeLeft = this.settings.breakTime * 60;
-            this.totalTime = this.settings.breakTime * 60;
-        }
-        
-        this.updateDisplay();
-    }
-    
-    async loadSettings() {
-        try {
-            const result = await chrome.storage.local.get(['settings']);
-            if (result.settings) {
-                this.settings = { ...this.settings, ...result.settings };
-            }
-        } catch (error) {
-            console.error('加载设置失败:', error);
-        }
-    }
-    
     async saveSettings() {
         try {
             const workTime = parseInt(document.getElementById('workTime').value);
@@ -173,19 +153,20 @@ class SimpleFlowTimer {
                 return;
             }
             
-            // 保存设置
-            this.settings.workTime = workTime;
-            this.settings.breakTime = breakTime;
+            // 保存设置到后台
+            const response = await this.sendMessage({
+                type: 'UPDATE_SETTINGS',
+                settings: { workTime, breakTime }
+            });
             
-            await chrome.storage.local.set({ settings: this.settings });
-            
-            // 如果当前是工作模式，更新时间
-            if (this.currentMode === 'work') {
-                this.setMode('work');
+            if (response.success) {
+                this.settings.workTime = workTime;
+                this.settings.breakTime = breakTime;
+                this.closeSettings();
+                alert('设置已保存！');
+            } else {
+                alert('保存设置失败，请重试');
             }
-            
-            this.closeSettings();
-            alert('设置已保存！');
             
         } catch (error) {
             console.error('保存设置失败:', error);

@@ -4,11 +4,15 @@
   "version": "1.0.0",
   "description": "一款专为提升注意力和生产力而设计的番茄钟浏览器插件",
   "permissions": [
-    "storage"
+    "storage",
+    "notifications"
   ],
   "action": {
     "default_popup": "popup.html",
     "default_title": "FlowTimer - 专注工作，高效生活"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "icons/icon16.png",
