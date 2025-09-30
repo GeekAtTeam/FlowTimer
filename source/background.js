@@ -168,10 +168,12 @@ class BackgroundTimer {
             // 专注时间结束，进入休息时间
             this.setMode('break');
             this.showNotification('专注时间结束！', '开始休息时间。');
+            this.playSound('workCompleteSound');
         } else {
             // 休息时间结束，进入专注时间
             this.setMode('work');
             this.showNotification('休息时间结束！', '准备开始下一轮专注工作。');
+            this.playSound('breakCompleteSound');
         }
         
         this.saveState();
@@ -198,6 +200,20 @@ class BackgroundTimer {
             });
         } catch (error) {
             console.error('显示通知失败:', error);
+        }
+    }
+    
+    playSound(soundType) {
+        try {
+            // 向所有打开的弹窗发送音效播放消息
+            chrome.runtime.sendMessage({
+                type: 'PLAY_SOUND',
+                soundType: soundType
+            }).catch(error => {
+                console.log('发送音效播放消息失败:', error);
+            });
+        } catch (error) {
+            console.error('播放音效时出错:', error);
         }
     }
 }

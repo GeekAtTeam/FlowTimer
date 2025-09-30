@@ -23,6 +23,7 @@ class SimpleFlowTimer {
         this.updateButtons();
         this.bindEvents();
         this.startUIUpdate();
+        this.setupMessageListener();
     }
     
     async loadState() {
@@ -83,6 +84,8 @@ class SimpleFlowTimer {
             this.isRunning = true;
             this.isPaused = false;
             this.updateButtons();
+            // 播放开始音效
+            this.playSound('timerStartSound');
         }
     }
     
@@ -150,6 +153,32 @@ class SimpleFlowTimer {
         setTimeout(() => {
             messageArea.style.display = 'none';
         }, 3000);
+    }
+    
+    playSound(soundType) {
+        try {
+            const audioElement = document.getElementById(soundType);
+            if (audioElement) {
+                // 重置音频到开始位置
+                audioElement.currentTime = 0;
+                // 播放音效
+                audioElement.play().catch(error => {
+                    console.log('音效播放失败:', error);
+                    // 如果自动播放被阻止，可以显示提示让用户手动播放
+                });
+            }
+        } catch (error) {
+            console.error('播放音效时出错:', error);
+        }
+    }
+    
+    setupMessageListener() {
+        // 监听来自后台脚本的消息
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.type === 'PLAY_SOUND') {
+                this.playSound(message.soundType);
+            }
+        });
     }
     
     async saveSettings() {
