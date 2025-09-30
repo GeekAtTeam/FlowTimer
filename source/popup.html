@@ -110,6 +110,129 @@
             color: #666;
             font-size: 14px;
         }
+        
+        .footer {
+            display: flex;
+            justify-content: center;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+        
+        .btn-ghost:hover {
+            background: #f5f5f5;
+        }
+        
+        /* 设置弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .setting-group {
+            margin-bottom: 20px;
+        }
+        
+        .setting-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .setting-group input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .setting-group input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -131,6 +254,34 @@
             
             <div class="stats">
                 专注工作，高效生活
+            </div>
+        </div>
+        
+        <div class="footer">
+            <button id="settingsBtn" class="btn btn-ghost">⚙️ 设置</button>
+        </div>
+    </div>
+
+    <!-- 设置弹窗 -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>设置</h3>
+                <button id="closeSettings" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <label for="workTime">专注时间（分钟）</label>
+                    <input type="number" id="workTime" min="1" max="60" value="25">
+                </div>
+                <div class="setting-group">
+                    <label for="breakTime">休息时间（分钟）</label>
+                    <input type="number" id="breakTime" min="1" max="30" value="5">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettings" class="btn btn-primary">保存</button>
+                <button id="cancelSettings" class="btn btn-secondary">取消</button>
             </div>
         </div>
     </div>
