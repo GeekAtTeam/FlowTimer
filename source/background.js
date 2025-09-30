@@ -12,7 +12,8 @@ class BackgroundTimer {
             totalTime: 25 * 60,
             settings: {
                 workTime: 25 * 60, // 25:00 = 1500秒
-                breakTime: 5 * 60  // 5:00 = 300秒
+                breakTime: 5 * 60, // 5:00 = 300秒
+                soundEnabled: true // 音效开关，默认开启
             }
         };
         
@@ -204,6 +205,11 @@ class BackgroundTimer {
     }
     
     playSound(soundType) {
+        // 检查音效开关是否开启
+        if (!this.timerState.settings.soundEnabled) {
+            return;
+        }
+        
         try {
             // 向所有打开的弹窗发送音效播放消息
             chrome.runtime.sendMessage({

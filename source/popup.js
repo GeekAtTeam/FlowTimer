@@ -11,7 +11,8 @@ class SimpleFlowTimer {
         this.currentMode = 'work';
         this.settings = {
             workTime: 25 * 60, // 25分钟 = 1500秒
-            breakTime: 5 * 60  // 5分钟 = 300秒
+            breakTime: 5 * 60, // 5分钟 = 300秒
+            soundEnabled: true // 音效开关，默认开启
         };
         
         this.init();
@@ -156,6 +157,11 @@ class SimpleFlowTimer {
     }
     
     playSound(soundType) {
+        // 检查音效开关是否开启
+        if (!this.settings.soundEnabled) {
+            return;
+        }
+        
         try {
             const audioElement = document.getElementById(soundType);
             if (audioElement) {
@@ -187,6 +193,7 @@ class SimpleFlowTimer {
             const workUnit = document.getElementById('workUnit').value;
             const breakTime = parseInt(document.getElementById('breakTime').value) || 0;
             const breakUnit = document.getElementById('breakUnit').value;
+            const soundEnabled = document.getElementById('soundEnabled').checked;
             
             // 转换为总秒数
             const workTimeInSeconds = workUnit === 'minutes' ? workTime * 60 : workTime;
@@ -208,13 +215,15 @@ class SimpleFlowTimer {
                 type: 'UPDATE_SETTINGS',
                 settings: { 
                     workTime: workTimeInSeconds, 
-                    breakTime: breakTimeInSeconds 
+                    breakTime: breakTimeInSeconds,
+                    soundEnabled: soundEnabled
                 }
             });
             
             if (response.success) {
                 this.settings.workTime = workTimeInSeconds;
                 this.settings.breakTime = breakTimeInSeconds;
+                this.settings.soundEnabled = soundEnabled;
                 this.closeSettings();
                 this.showMessage('设置已保存！', 'success');
             } else {
@@ -251,6 +260,9 @@ class SimpleFlowTimer {
             document.getElementById('breakUnit').value = 'seconds';
         }
         
+        // 设置音效开关状态
+        document.getElementById('soundEnabled').checked = this.settings.soundEnabled;
+        
         document.getElementById('settingsModal').style.display = 'block';
     }
     
@@ -264,6 +276,8 @@ class SimpleFlowTimer {
         document.getElementById('workUnit').value = 'minutes';
         document.getElementById('breakTime').value = 5;
         document.getElementById('breakUnit').value = 'minutes';
+        // 重置音效开关为开启状态
+        document.getElementById('soundEnabled').checked = true;
     }
 }
 
