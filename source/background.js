@@ -11,8 +11,8 @@ class BackgroundTimer {
             timeLeft: 25 * 60, // 默认25分钟
             totalTime: 25 * 60,
             settings: {
-                workTime: 25,
-                breakTime: 5
+                workTime: 25 * 60, // 25:00 = 1500秒
+                breakTime: 5 * 60  // 5:00 = 300秒
             }
         };
         
@@ -130,11 +130,11 @@ class BackgroundTimer {
         this.timerState.currentMode = mode;
         
         if (mode === 'work') {
-            this.timerState.timeLeft = this.timerState.settings.workTime * 60;
-            this.timerState.totalTime = this.timerState.settings.workTime * 60;
+            this.timerState.timeLeft = this.timerState.settings.workTime;
+            this.timerState.totalTime = this.timerState.settings.workTime;
         } else {
-            this.timerState.timeLeft = this.timerState.settings.breakTime * 60;
-            this.timerState.totalTime = this.timerState.settings.breakTime * 60;
+            this.timerState.timeLeft = this.timerState.settings.breakTime;
+            this.timerState.totalTime = this.timerState.settings.breakTime;
         }
     }
     

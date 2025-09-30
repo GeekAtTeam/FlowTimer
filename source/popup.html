@@ -146,13 +146,17 @@
         
         .modal-content {
             background: white;
-            margin: 10% auto;
+            margin: 2% auto;
             padding: 0;
             border-radius: 12px;
-            width: 90%;
+            width: 95%;
             max-width: 400px;
+            min-height: 350px;
+            max-height: 90vh;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             animation: modalSlideIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
         
         @keyframes modalSlideIn {
@@ -200,10 +204,24 @@
         
         .modal-body {
             padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
         }
         
         .setting-group {
             margin-bottom: 20px;
+        }
+        
+        .time-settings-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .time-settings-row .setting-group {
+            flex: 1;
+            margin-bottom: 0;
         }
         
         .setting-group label {
@@ -226,19 +244,58 @@
             border-color: #4CAF50;
         }
         
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .time-input-group input[type="number"] {
+            width: 70px;
+            text-align: center;
+            -moz-appearance: textfield; /* Firefox */
+        }
+        
+        .time-input-group input[type="number"]::-webkit-outer-spin-button,
+        .time-input-group input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .time-input-group select {
+            padding: 10px 6px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            width: 60px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: none;
+        }
+        
+        .time-input-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
         .modal-footer {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
             padding: 20px;
             border-top: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            background: white;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">🍅 FlowTimer</h1>
+            <h1 class="title">FlowTimer</h1>
         </div>
         
         <div class="main">
@@ -248,8 +305,8 @@
             </div>
             
             <div class="controls">
-                <button id="playPauseBtn" class="btn btn-primary">▶️ 开始</button>
-                <button id="resetBtn" class="btn btn-secondary">🔄 重置</button>
+                <button id="playPauseBtn" class="btn btn-primary">开始</button>
+                <button id="resetBtn" class="btn btn-secondary">重置</button>
             </div>
             
             <div class="stats">
@@ -270,13 +327,30 @@
                 <button id="closeSettings" class="close-btn">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="setting-group">
-                    <label for="workTime">专注时间（分钟）</label>
-                    <input type="number" id="workTime" min="1" max="60" value="25">
+                <div class="time-settings-row">
+                    <div class="setting-group">
+                        <label>专注时间</label>
+                        <div class="time-input-group">
+                            <input type="number" id="workTime" min="1" value="25" placeholder="时间">
+                            <select id="workUnit">
+                                <option value="minutes">分钟</option>
+                                <option value="seconds">秒</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <label>休息时间</label>
+                        <div class="time-input-group">
+                            <input type="number" id="breakTime" min="1" value="5" placeholder="时间">
+                            <select id="breakUnit">
+                                <option value="minutes">分钟</option>
+                                <option value="seconds">秒</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="setting-group">
-                    <label for="breakTime">休息时间（分钟）</label>
-                    <input type="number" id="breakTime" min="1" max="30" value="5">
+                    <button id="resetToDefault" class="btn btn-secondary">恢复默认值</button>
                 </div>
             </div>
             <div class="modal-footer">

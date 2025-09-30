@@ -10,8 +10,8 @@ class SimpleFlowTimer {
         this.totalTime = 25 * 60;
         this.currentMode = 'work';
         this.settings = {
-            workTime: 25,
-            breakTime: 5
+            workTime: 25 * 60, // 25分钟 = 1500秒
+            breakTime: 5 * 60  // 5分钟 = 300秒
         };
         
         this.init();
@@ -59,6 +59,7 @@ class SimpleFlowTimer {
         document.getElementById('closeSettings').addEventListener('click', () => this.closeSettings());
         document.getElementById('saveSettings').addEventListener('click', () => this.saveSettings());
         document.getElementById('cancelSettings').addEventListener('click', () => this.closeSettings());
+        document.getElementById('resetToDefault').addEventListener('click', () => this.resetToDefault());
         
         // 点击弹窗外部关闭
         document.getElementById('settingsModal').addEventListener('click', (e) => {
@@ -139,29 +140,38 @@ class SimpleFlowTimer {
     
     async saveSettings() {
         try {
-            const workTime = parseInt(document.getElementById('workTime').value);
-            const breakTime = parseInt(document.getElementById('breakTime').value);
+            const workTime = parseInt(document.getElementById('workTime').value) || 0;
+            const workUnit = document.getElementById('workUnit').value;
+            const breakTime = parseInt(document.getElementById('breakTime').value) || 0;
+            const breakUnit = document.getElementById('breakUnit').value;
+            
+            // 转换为总秒数
+            const workTimeInSeconds = workUnit === 'minutes' ? workTime * 60 : workTime;
+            const breakTimeInSeconds = breakUnit === 'minutes' ? breakTime * 60 : breakTime;
             
             // 验证输入
-            if (workTime < 1 || workTime > 60) {
-                alert('专注时间必须在1-60分钟之间');
+            if (workTimeInSeconds < 1) {
+                alert('专注时间必须大于0');
                 return;
             }
             
-            if (breakTime < 1 || breakTime > 30) {
-                alert('休息时间必须在1-30分钟之间');
+            if (breakTimeInSeconds < 1) {
+                alert('休息时间必须大于0');
                 return;
             }
             
             // 保存设置到后台
             const response = await this.sendMessage({
                 type: 'UPDATE_SETTINGS',
-                settings: { workTime, breakTime }
+                settings: { 
+                    workTime: workTimeInSeconds, 
+                    breakTime: breakTimeInSeconds 
+                }
             });
             
             if (response.success) {
-                this.settings.workTime = workTime;
-                this.settings.breakTime = breakTime;
+                this.settings.workTime = workTimeInSeconds;
+                this.settings.breakTime = breakTimeInSeconds;
                 this.closeSettings();
                 alert('设置已保存！');
             } else {
@@ -175,13 +185,42 @@ class SimpleFlowTimer {
     }
     
     openSettings() {
-        document.getElementById('workTime').value = this.settings.workTime;
-        document.getElementById('breakTime').value = this.settings.breakTime;
+        // 将秒数转换为合适的显示格式
+        const workMinutes = Math.floor(this.settings.workTime / 60);
+        const workSeconds = this.settings.workTime % 60;
+        const breakMinutes = Math.floor(this.settings.breakTime / 60);
+        const breakSeconds = this.settings.breakTime % 60;
+        
+        // 如果秒数为0，显示分钟；否则显示秒数
+        if (workSeconds === 0) {
+            document.getElementById('workTime').value = workMinutes;
+            document.getElementById('workUnit').value = 'minutes';
+        } else {
+            document.getElementById('workTime').value = this.settings.workTime;
+            document.getElementById('workUnit').value = 'seconds';
+        }
+        
+        if (breakSeconds === 0) {
+            document.getElementById('breakTime').value = breakMinutes;
+            document.getElementById('breakUnit').value = 'minutes';
+        } else {
+            document.getElementById('breakTime').value = this.settings.breakTime;
+            document.getElementById('breakUnit').value = 'seconds';
+        }
+        
         document.getElementById('settingsModal').style.display = 'block';
     }
     
     closeSettings() {
         document.getElementById('settingsModal').style.display = 'none';
+    }
+    
+    resetToDefault() {
+        // 设置默认值：25分钟 和 5分钟
+        document.getElementById('workTime').value = 25;
+        document.getElementById('workUnit').value = 'minutes';
+        document.getElementById('breakTime').value = 5;
+        document.getElementById('breakUnit').value = 'minutes';
     }
 }
 
