@@ -138,6 +138,20 @@ class SimpleFlowTimer {
         }
     }
     
+    showMessage(text, type = 'success') {
+        const messageArea = document.getElementById('messageArea');
+        const messageText = document.getElementById('messageText');
+        
+        messageText.textContent = text;
+        messageArea.className = `message-area ${type}`;
+        messageArea.style.display = 'block';
+        
+        // 3秒后自动隐藏
+        setTimeout(() => {
+            messageArea.style.display = 'none';
+        }, 3000);
+    }
+    
     async saveSettings() {
         try {
             const workTime = parseInt(document.getElementById('workTime').value) || 0;
@@ -151,12 +165,12 @@ class SimpleFlowTimer {
             
             // 验证输入
             if (workTimeInSeconds < 1) {
-                alert('专注时间必须大于0');
+                this.showMessage('专注时间必须大于0', 'error');
                 return;
             }
             
             if (breakTimeInSeconds < 1) {
-                alert('休息时间必须大于0');
+                this.showMessage('休息时间必须大于0', 'error');
                 return;
             }
             
@@ -173,14 +187,14 @@ class SimpleFlowTimer {
                 this.settings.workTime = workTimeInSeconds;
                 this.settings.breakTime = breakTimeInSeconds;
                 this.closeSettings();
-                alert('设置已保存！');
+                this.showMessage('设置已保存！', 'success');
             } else {
-                alert('保存设置失败，请重试');
+                this.showMessage('保存设置失败，请重试', 'error');
             }
             
         } catch (error) {
             console.error('保存设置失败:', error);
-            alert('保存设置失败，请重试');
+            this.showMessage('保存设置失败，请重试', 'error');
         }
     }
     

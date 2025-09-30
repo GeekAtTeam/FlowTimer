@@ -111,6 +111,43 @@
             font-size: 14px;
         }
         
+        .message-area {
+            margin-top: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            animation: messageSlideIn 0.3s ease;
+        }
+        
+        .message-area.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message-area.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message-text {
+            margin: 0;
+        }
+        
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         .footer {
             display: flex;
             justify-content: center;
@@ -311,6 +348,11 @@
             
             <div class="stats">
                 专注工作，高效生活
+            </div>
+            
+            <!-- 提示信息区域 -->
+            <div id="messageArea" class="message-area" style="display: none;">
+                <div id="messageText" class="message-text"></div>
             </div>
         </div>
         
