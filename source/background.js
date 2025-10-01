@@ -259,8 +259,8 @@ class BackgroundTimer {
         chrome.windows.create({
             url: url,
             type: 'popup',
-            width: 500,
-            height: 400,
+            width: 520,
+            height: 420,
             left: 100,
             top: 100,
             focused: true
