@@ -15,6 +15,8 @@ class SimpleFlowTimer {
             soundEnabled: true // 音效开关，默认开启
         };
         
+        this.autoCloseTimer = null; // 自动关闭计时器ID
+        
         this.init();
     }
     
@@ -54,14 +56,23 @@ class SimpleFlowTimer {
     
     bindEvents() {
         document.getElementById('playPauseBtn').addEventListener('click', () => this.togglePlayPause());
-        document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            this.clearAutoCloseTimer(); // 清除自动关闭计时器
+            this.reset();
+        });
         
         // 设置相关事件
-        document.getElementById('settingsBtn').addEventListener('click', () => this.openSettings());
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            this.clearAutoCloseTimer(); // 清除自动关闭计时器
+            this.openSettings();
+        });
         document.getElementById('closeSettings').addEventListener('click', () => this.closeSettings());
         document.getElementById('saveSettings').addEventListener('click', () => this.saveSettings());
         document.getElementById('cancelSettings').addEventListener('click', () => this.closeSettings());
-        document.getElementById('resetToDefault').addEventListener('click', () => this.resetToDefault());
+        document.getElementById('resetToDefault').addEventListener('click', () => {
+            this.clearAutoCloseTimer(); // 清除自动关闭计时器
+            this.resetToDefault();
+        });
         
         // 点击弹窗外部关闭
         document.getElementById('settingsModal').addEventListener('click', (e) => {
@@ -88,10 +99,8 @@ class SimpleFlowTimer {
             // 播放开始音效
             this.playSound('timerStartSound');
             
-            // 2秒后自动关闭界面
-            setTimeout(() => {
-                window.close();
-            }, 2000);
+            // 设置2秒后自动关闭界面
+            this.setAutoCloseTimer();
         }
     }
     
@@ -101,6 +110,24 @@ class SimpleFlowTimer {
             this.isRunning = false;
             this.isPaused = true;
             this.updateButtons();
+            this.clearAutoCloseTimer(); // 清除自动关闭计时器
+        }
+    }
+    
+    setAutoCloseTimer() {
+        // 清除之前的计时器
+        this.clearAutoCloseTimer();
+        
+        // 设置新的2秒自动关闭计时器
+        this.autoCloseTimer = setTimeout(() => {
+            window.close();
+        }, 2000);
+    }
+    
+    clearAutoCloseTimer() {
+        if (this.autoCloseTimer) {
+            clearTimeout(this.autoCloseTimer);
+            this.autoCloseTimer = null;
         }
     }
     
@@ -193,6 +220,7 @@ class SimpleFlowTimer {
     }
     
     async saveSettings() {
+        this.clearAutoCloseTimer(); // 清除自动关闭计时器
         try {
             const workTime = parseInt(document.getElementById('workTime').value) || 0;
             const workUnit = document.getElementById('workUnit').value;
