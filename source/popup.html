@@ -46,8 +46,10 @@
                 <button id="closeSettings" class="close-btn">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="time-settings-row">
-                <div class="setting-group">
+                <!-- 时间设置分组 -->
+                <div class="settings-section">
+                    <h4 class="section-title">时间设置</h4>
+                    <div class="setting-group">
                         <label>专注时间</label>
                         <div class="time-input-group">
                             <input type="number" id="workTime" min="1" value="25" placeholder="时间">
@@ -56,8 +58,8 @@
                                 <option value="seconds">秒</option>
                             </select>
                         </div>
-                </div>
-                <div class="setting-group">
+                    </div>
+                    <div class="setting-group">
                         <label>休息时间</label>
                         <div class="time-input-group">
                             <input type="number" id="breakTime" min="1" value="5" placeholder="时间">
@@ -66,24 +68,30 @@
                                 <option value="seconds">秒</option>
                             </select>
                         </div>
+                    </div>
                 </div>
+
+                <!-- 音效设置分组 -->
+                <div class="settings-section">
+                    <h4 class="section-title">音效设置</h4>
+                    <div class="setting-group">
+                        <label>启用音效</label>
+                        <div class="sound-setting">
+                            <label class="switch">
+                                <input type="checkbox" id="soundEnabled" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="setting-group">
-                    <label>音效设置</label>
-                    <div class="sound-setting">
-                        <label class="switch">
-                            <input type="checkbox" id="soundEnabled" checked>
-                            <span class="slider"></span>
-                        </label>
-                        <span class="sound-label">启用音效</span>
-                </div>
-                </div>
-                <div class="setting-group">
-                    <button id="resetToDefault" class="btn btn-secondary">恢复默认值</button>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <button id="resetToDefault" class="btn btn-secondary">恢复默认设置</button>
+                    <button id="saveSettings" class="btn btn-primary">保存设置</button>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="saveSettings" class="btn btn-primary">保存</button>
                 <button id="cancelSettings" class="btn btn-secondary">取消</button>
             </div>
         </div>
