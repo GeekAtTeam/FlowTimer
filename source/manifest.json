@@ -5,7 +5,8 @@
   "description": "一款专为提升注意力和生产力而设计的番茄钟浏览器插件",
   "permissions": [
     "storage",
-    "notifications"
+    "notifications",
+    "windows"
   ],
   "action": {
     "default_popup": "popup.html",

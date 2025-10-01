@@ -17,6 +17,9 @@ class BackgroundTimer {
             }
         };
         
+        this.countdownInterval = null; // For setInterval
+        this.notificationWindowId = null; // 提示窗口ID
+        
         this.init();
     }
     
@@ -96,6 +99,16 @@ class BackgroundTimer {
                 sendResponse({ success: true, settings: this.timerState.settings });
                 break;
                 
+            case 'OPEN_MAIN_INTERFACE':
+                this.openMainInterface();
+                sendResponse({ success: true });
+                break;
+                
+            case 'CLOSE_NOTIFICATION_WINDOW':
+                this.closeNotificationWindow(message.windowId);
+                sendResponse({ success: true });
+                break;
+                
             default:
                 sendResponse({ success: false, error: '未知消息类型' });
         }
@@ -161,19 +174,21 @@ class BackgroundTimer {
     
     
     completeSession() {
+        console.log('completeSession被调用，当前模式:', this.timerState.currentMode);
+        
         this.stopCountdown();
         this.timerState.isRunning = false;
         this.timerState.isPaused = false;
         
         if (this.timerState.currentMode === 'work') {
             // 专注时间结束，进入休息时间
+            console.log('专注时间结束，切换到休息模式');
             this.setMode('break');
-            this.showNotification('专注时间结束！', '开始休息时间。');
             this.playSound('workCompleteSound');
         } else {
             // 休息时间结束，进入专注时间
+            console.log('休息时间结束，切换到工作模式');
             this.setMode('work');
-            this.showNotification('休息时间结束！', '准备开始下一轮专注工作。');
             this.playSound('breakCompleteSound');
         }
         
@@ -205,21 +220,80 @@ class BackgroundTimer {
     }
     
     playSound(soundType) {
+        console.log('playSound被调用，音效类型:', soundType);
+        console.log('音效开关状态:', this.timerState.settings.soundEnabled);
+        
         // 检查音效开关是否开启
         if (!this.timerState.settings.soundEnabled) {
+            console.log('音效已关闭，跳过播放');
             return;
         }
         
         try {
-            // 向所有打开的弹窗发送音效播放消息
+            // 先尝试向弹窗发送音效播放消息
             chrome.runtime.sendMessage({
                 type: 'PLAY_SOUND',
                 soundType: soundType
+            }).then(() => {
+                console.log('弹窗音效播放成功');
             }).catch(error => {
-                console.log('发送音效播放消息失败:', error);
+                console.log('弹窗未打开，创建提示窗口:', error);
+                // 如果弹窗未打开，创建独立的提示窗口
+                this.createNotificationWindow(soundType);
             });
         } catch (error) {
             console.error('播放音效时出错:', error);
+            // 出错时也创建提示窗口作为备用
+            this.createNotificationWindow(soundType);
+        }
+    }
+    
+    createNotificationWindow(soundType) {
+        console.log('开始创建提示窗口，音效类型:', soundType);
+        
+        // 创建提示窗口的URL
+        const url = chrome.runtime.getURL('notification.html') + `?sound=${soundType}`;
+        console.log('提示窗口URL:', url);
+        
+        // 创建窗口
+        chrome.windows.create({
+            url: url,
+            type: 'popup',
+            width: 500,
+            height: 400,
+            left: 100,
+            top: 100,
+            focused: true
+        }).then(window => {
+            console.log('提示窗口创建成功:', window.id);
+            // 保存窗口ID，用于后续关闭
+            this.notificationWindowId = window.id;
+        }).catch(error => {
+            console.error('创建提示窗口失败:', error);
+        });
+    }
+    
+    openMainInterface() {
+        // 尝试打开主插件界面
+        try {
+            chrome.action.openPopup();
+        } catch (error) {
+            console.log('无法打开主界面:', error);
+            // 如果无法打开弹窗，显示提示
+            this.showNotification('FlowTimer', '请点击浏览器工具栏中的FlowTimer图标打开主界面');
+        }
+    }
+    
+    closeNotificationWindow(windowId) {
+        if (windowId) {
+            chrome.windows.remove(windowId).catch(error => {
+                console.log('关闭窗口失败:', error);
+            });
+        }
+        
+        // 清除保存的窗口ID
+        if (this.notificationWindowId === windowId) {
+            this.notificationWindowId = null;
         }
     }
 }
