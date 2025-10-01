@@ -260,21 +260,48 @@ class BackgroundTimer {
         const url = chrome.runtime.getURL('notification.html') + `?sound=${soundType}`;
         console.log('提示窗口URL:', url);
         
-        // 创建窗口
-        chrome.windows.create({
-            url: url,
-            type: 'popup',
-            width: 520,
-            height: 420,
-            left: 100,
-            top: 100,
-            focused: true
+        // 先获取当前窗口信息来计算居中位置
+        chrome.windows.getCurrent().then(currentWindow => {
+            const windowWidth = 520;
+            const windowHeight = 420;
+            
+            // 计算居中位置
+            const left = Math.round((currentWindow.width - windowWidth) / 2);
+            const top = Math.round((currentWindow.height - windowHeight) / 2);
+            
+            console.log('计算出的窗口位置:', { left, top, currentWindowWidth: currentWindow.width, currentWindowHeight: currentWindow.height });
+            
+            // 创建窗口
+            return chrome.windows.create({
+                url: url,
+                type: 'popup',
+                width: windowWidth,
+                height: windowHeight,
+                left: left,
+                top: top,
+                focused: true
+            });
         }).then(window => {
             console.log('提示窗口创建成功:', window.id);
             // 保存窗口ID，用于后续关闭
             this.notificationWindowId = window.id;
         }).catch(error => {
             console.error('创建提示窗口失败:', error);
+            // 如果失败，尝试使用默认位置创建窗口
+            chrome.windows.create({
+                url: url,
+                type: 'popup',
+                width: 520,
+                height: 420,
+                left: 100,
+                top: 100,
+                focused: true
+            }).then(window => {
+                console.log('使用默认位置创建提示窗口成功:', window.id);
+                this.notificationWindowId = window.id;
+            }).catch(defaultError => {
+                console.error('使用默认位置创建提示窗口也失败:', defaultError);
+            });
         });
     }
     
