@@ -12,11 +12,6 @@ class NotificationWindow {
         this.bindEvents();
         this.updateDisplay();
         this.playSound();
-        
-        // 自动关闭窗口（30秒后）
-        setTimeout(() => {
-            this.closeWindow();
-        }, 30000);
     }
     
     getWindowId() {
@@ -78,26 +73,20 @@ class NotificationWindow {
                 
             }).catch(error => {
                 console.log('音效播放失败:', error);
-                this.updateSoundStatus('音效播放失败');
             });
         } else {
             console.log(`未找到音频元素: ${this.soundType}`);
-            this.updateSoundStatus('音效文件未找到');
         }
     }
     
-    updateSoundStatus(status) {
-        const soundStatus = document.getElementById('soundStatus');
-        soundStatus.textContent = status;
-    }
     
     bindEvents() {
-        // 打开主界面按钮
-        document.getElementById('openMain').addEventListener('click', () => {
-            this.openMainInterface();
+        // 继续计时按钮
+        document.getElementById('continueTimer').addEventListener('click', () => {
+            this.continueTimer();
         });
         
-        // 关闭窗口按钮
+        // 我知道了按钮
         document.getElementById('closeWindow').addEventListener('click', () => {
             this.closeWindow();
         });
@@ -115,14 +104,17 @@ class NotificationWindow {
         });
     }
     
-    openMainInterface() {
-        // 通知后台打开主插件界面
+    continueTimer() {
+        // 通知后台继续计时（相当于点击开始按钮）
         chrome.runtime.sendMessage({
-            type: 'OPEN_MAIN_INTERFACE'
+            type: 'CONTINUE_TIMER'
         }).then(() => {
+            console.log('继续计时成功');
             this.closeWindow();
         }).catch(error => {
-            console.log('无法打开主界面:', error);
+            console.log('无法继续计时:', error);
+            // 如果无法继续计时，仍然关闭窗口
+            this.closeWindow();
         });
     }
     

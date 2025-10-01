@@ -104,6 +104,11 @@ class BackgroundTimer {
                 sendResponse({ success: true });
                 break;
                 
+            case 'CONTINUE_TIMER':
+                this.startTimer(); // 继续计时，相当于点击开始按钮
+                sendResponse({ success: true });
+                break;
+                
             case 'CLOSE_NOTIFICATION_WINDOW':
                 this.closeNotificationWindow(message.windowId);
                 sendResponse({ success: true });
