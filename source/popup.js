@@ -87,6 +87,11 @@ class SimpleFlowTimer {
             this.updateButtons();
             // 播放开始音效
             this.playSound('timerStartSound');
+            
+            // 2秒后自动关闭界面
+            setTimeout(() => {
+                window.close();
+            }, 2000);
         }
     }
     
@@ -134,11 +139,11 @@ class SimpleFlowTimer {
         const playPauseBtn = document.getElementById('playPauseBtn');
         
         if (this.isRunning) {
-            playPauseBtn.textContent = '⏸️ 暂停';
+            playPauseBtn.textContent = '暂停';
         } else if (this.isPaused) {
-            playPauseBtn.textContent = '▶️ 继续';
+            playPauseBtn.textContent = '继续';
         } else {
-            playPauseBtn.textContent = '▶️ 开始';
+            playPauseBtn.textContent = '开始';
         }
     }
     
