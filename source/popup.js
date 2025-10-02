@@ -68,7 +68,6 @@ class SimpleFlowTimer {
         });
         document.getElementById('closeSettings').addEventListener('click', () => this.closeSettings());
         document.getElementById('saveSettings').addEventListener('click', () => this.saveSettings());
-        document.getElementById('cancelSettings').addEventListener('click', () => this.closeSettings());
         document.getElementById('resetToDefault').addEventListener('click', () => {
             this.clearAutoCloseTimer(); // 清除自动关闭计时器
             this.resetToDefault();
