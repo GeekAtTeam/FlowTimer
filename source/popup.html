@@ -9,8 +9,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1 class="title">FlowTimer</h1>
+            <div class="header-content">
+                <img src="icons/icon.png" alt="FlowTimer" class="header-icon">
+                <h1 class="title">FlowTimer</h1>
             </div>
+        </div>
 
         <div class="main">
             <div class="timer-display">
@@ -27,14 +30,11 @@
                 专注工作，高效生活
             </div>
             
-            <!-- 提示信息区域 -->
-            <div id="messageArea" class="message-area" style="display: none;">
-                <div id="messageText" class="message-text"></div>
-            </div>
         </div>
 
         <div class="footer">
-            <button id="settingsBtn" class="btn btn-ghost">⚙️ 设置</button>
+            <div class="version">v1.0.0</div>
+            <button id="settingsBtn" class="btn btn-ghost settings-btn">⚙️</button>
         </div>
     </div>
 
@@ -106,6 +106,9 @@
     <audio id="timerStartSound" preload="auto">
         <source src="sounds/timer-start.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Toast 提示容器 -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <script src="popup.js"></script>
 </body>

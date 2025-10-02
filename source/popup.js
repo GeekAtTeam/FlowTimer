@@ -174,16 +174,21 @@ class SimpleFlowTimer {
     }
     
     showMessage(text, type = 'success') {
-        const messageArea = document.getElementById('messageArea');
-        const messageText = document.getElementById('messageText');
+        const toastContainer = document.getElementById('toastContainer');
         
-        messageText.textContent = text;
-        messageArea.className = `message-area ${type}`;
-        messageArea.style.display = 'block';
+        // 创建 Toast 元素
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = text;
         
-        // 3秒后自动隐藏
+        // 添加到容器
+        toastContainer.appendChild(toast);
+        
+        // 3秒后自动移除
         setTimeout(() => {
-            messageArea.style.display = 'none';
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
         }, 3000);
     }
     
