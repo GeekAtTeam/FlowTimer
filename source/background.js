@@ -260,16 +260,49 @@ class BackgroundTimer {
         const url = chrome.runtime.getURL('notification.html') + `?sound=${soundType}`;
         console.log('提示窗口URL:', url);
         
-        // 先获取当前窗口信息来计算居中位置
-        chrome.windows.getCurrent().then(currentWindow => {
-            const windowWidth = 520;
-            const windowHeight = 420;
+        const windowWidth = 520;
+        const windowHeight = 420;
+        
+        // 获取所有窗口信息，找到主屏幕窗口
+        chrome.windows.getAll({populate: false}).then(windows => {
+            let mainWindow = null;
             
-            // 计算居中位置
-            const left = Math.round((currentWindow.width - windowWidth) / 2);
-            const top = Math.round((currentWindow.height - windowHeight) / 2);
+            // 寻找主屏幕窗口（通常是最大的窗口或非popup类型的窗口）
+            for (const window of windows) {
+                if (window.type === 'normal' && window.state === 'normal') {
+                    mainWindow = window;
+                    break;
+                }
+            }
             
-            console.log('计算出的窗口位置:', { left, top, currentWindowWidth: currentWindow.width, currentWindowHeight: currentWindow.height });
+            // 如果没找到主窗口，使用第一个窗口
+            if (!mainWindow && windows.length > 0) {
+                mainWindow = windows[0];
+            }
+            
+            let left = 100;
+            let top = 100;
+            
+            if (mainWindow) {
+                // 计算居中位置
+                left = Math.round(mainWindow.left + (mainWindow.width - windowWidth) / 2);
+                top = Math.round(mainWindow.top + (mainWindow.height - windowHeight) / 2);
+                
+                // 确保窗口不会超出屏幕边界
+                left = Math.max(0, left);
+                top = Math.max(0, top);
+                
+                console.log('计算出的窗口位置:', { 
+                    left, 
+                    top, 
+                    mainWindowLeft: mainWindow.left,
+                    mainWindowTop: mainWindow.top,
+                    mainWindowWidth: mainWindow.width, 
+                    mainWindowHeight: mainWindow.height 
+                });
+            } else {
+                console.log('未找到主窗口，使用默认位置');
+            }
             
             // 创建窗口
             return chrome.windows.create({
@@ -291,8 +324,8 @@ class BackgroundTimer {
             chrome.windows.create({
                 url: url,
                 type: 'popup',
-                width: 520,
-                height: 420,
+                width: windowWidth,
+                height: windowHeight,
                 left: 100,
                 top: 100,
                 focused: true
