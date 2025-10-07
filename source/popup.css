@@ -407,6 +407,32 @@ body {
     border-color: #4CAF50;
 }
 
+.language-input-group {
+    display: flex;
+    align-items: center;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.language-input-group select {
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    min-width: 150px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
+}
+
+.language-input-group select:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
 .sound-setting {
     display: flex;
     align-items: center;

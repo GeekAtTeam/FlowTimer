@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "FlowTimer",
+    "tagline": "Focus on work, live efficiently"
+  },
+  "timer": {
+    "focusTime": "Focus Time",
+    "breakTime": "Break Time",
+    "start": "Start",
+    "pause": "Pause",
+    "reset": "Reset",
+    "continue": "Continue"
+  },
+  "settings": {
+    "title": "Settings",
+    "timeSettings": "Time Settings",
+    "focusTime": "Focus Time",
+    "breakTime": "Break Time",
+    "minutes": "min",
+    "seconds": "sec",
+    "languageSettings": "Language Settings",
+    "language": "Language",
+    "languageOptions": {
+      "system": "Follow System",
+      "zh-CN": "中文",
+      "en-US": "English"
+    },
+    "soundSettings": "Sound Settings",
+    "enableSound": "Enable Sound",
+    "resetToDefault": "Reset to Default",
+    "saveSettings": "Save Settings"
+  },
+  "notifications": {
+    "focusComplete": "Focus Time Complete",
+    "focusCompleteMessage": "Congratulations! Focus time is complete, now you can take a break. ☕",
+    "breakComplete": "Break Time Complete",
+    "breakCompleteMessage": "Break time is over, let's continue focusing on work! 💪",
+    "timeReminder": "Time Reminder",
+    "continueTimer": "Continue",
+    "iKnow": "Break",
+    "openMainInterface": "Please click the FlowTimer icon in the browser toolbar to open the main interface"
+  },
+  "toast": {
+    "settingsSaved": "Settings saved!",
+    "settingsReset": "Settings reset to default",
+    "timerStarted": "Timer started",
+    "timerPaused": "Timer paused",
+    "timerReset": "Timer reset",
+    "focusTimeMustBeGreaterThanZero": "Focus time must be greater than 0",
+    "breakTimeMustBeGreaterThanZero": "Break time must be greater than 0",
+    "saveSettingsFailed": "Failed to save settings, please try again"
+  }
+}

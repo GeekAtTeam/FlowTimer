@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlowTimer</title>
     <link rel="stylesheet" href="popup.css">
+    <script src="js/i18n.js"></script>
 </head>
 <body>
     <div class="container">
@@ -18,15 +19,15 @@
         <div class="main">
             <div class="timer-display">
                 <div class="time" id="timeDisplay">25:00</div>
-                <div class="mode">专注时间</div>
+                <div class="mode" data-i18n="timer.focusTime">专注时间</div>
         </div>
 
         <div class="controls">
-                <button id="playPauseBtn" class="btn btn-primary">开始</button>
-                <button id="resetBtn" class="btn btn-secondary">重置</button>
+                <button id="playPauseBtn" class="btn btn-primary" data-i18n="timer.start">开始</button>
+                <button id="resetBtn" class="btn btn-secondary" data-i18n="timer.reset">重置</button>
         </div>
 
-            <div class="stats">
+            <div class="stats" data-i18n="app.tagline">
                 专注工作，高效生活
             </div>
             
@@ -34,7 +35,7 @@
 
         <div class="footer">
             <div class="version">v1.0.0</div>
-            <button id="settingsBtn" class="settings-btn" title="设置">⚙️</button>
+            <button id="settingsBtn" class="settings-btn" data-i18n-title="settings.title" title="设置">⚙️</button>
         </div>
     </div>
 
@@ -44,30 +45,30 @@
             <div class="modal-header">
                 <div class="header-left">
                     <button id="backToMain" class="back-btn">‹</button>
-                    <h3>设置</h3>
+                    <h3 data-i18n="settings.title">设置</h3>
                 </div>
             </div>
             <div class="modal-body">
                 <!-- 时间设置分组 -->
                 <div class="settings-section">
-                    <h4 class="section-title">时间设置</h4>
+                    <h4 class="section-title" data-i18n="settings.timeSettings">时间设置</h4>
                     <div class="setting-group">
-                        <label>专注时间</label>
+                        <label data-i18n="settings.focusTime">专注时间</label>
                         <div class="time-input-group">
                             <input type="number" id="workTime" min="1" value="25" placeholder="时间">
                             <select id="workUnit">
-                                <option value="minutes">分钟</option>
-                                <option value="seconds">秒</option>
+                                <option value="minutes" data-i18n="settings.minutes">分钟</option>
+                                <option value="seconds" data-i18n="settings.seconds">秒</option>
                             </select>
                         </div>
                     </div>
                     <div class="setting-group">
-                        <label>休息时间</label>
+                        <label data-i18n="settings.breakTime">休息时间</label>
                         <div class="time-input-group">
                             <input type="number" id="breakTime" min="1" value="5" placeholder="时间">
                             <select id="breakUnit">
-                                <option value="minutes">分钟</option>
-                                <option value="seconds">秒</option>
+                                <option value="minutes" data-i18n="settings.minutes">分钟</option>
+                                <option value="seconds" data-i18n="settings.seconds">秒</option>
                             </select>
                         </div>
                     </div>
@@ -75,9 +76,9 @@
 
                 <!-- 音效设置分组 -->
                 <div class="settings-section">
-                    <h4 class="section-title">音效设置</h4>
+                    <h4 class="section-title" data-i18n="settings.soundSettings">音效设置</h4>
                     <div class="setting-group">
-                        <label>启用音效</label>
+                        <label data-i18n="settings.enableSound">启用音效</label>
                         <div class="sound-setting">
                             <label class="switch">
                                 <input type="checkbox" id="soundEnabled" checked>
@@ -87,10 +88,25 @@
                     </div>
                 </div>
 
+                <!-- 语言设置分组 -->
+                <div class="settings-section">
+                    <h4 class="section-title" data-i18n="settings.languageSettings">语言设置</h4>
+                    <div class="setting-group">
+                        <label data-i18n="settings.language">语言</label>
+                        <div class="language-input-group">
+                            <select id="languageSelect">
+                                <option value="system" data-i18n="settings.languageOptions.system">跟随系统</option>
+                                <option value="zh-CN" data-i18n="settings.languageOptions.zh-CN">中文</option>
+                                <option value="en-US" data-i18n="settings.languageOptions.en-US">English</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- 操作按钮 -->
                 <div class="action-buttons">
-                    <button id="resetToDefault" class="btn btn-secondary">恢复默认设置</button>
-                    <button id="saveSettings" class="btn btn-primary">保存设置</button>
+                    <button id="resetToDefault" class="btn btn-secondary" data-i18n="settings.resetToDefault">恢复默认设置</button>
+                    <button id="saveSettings" class="btn btn-primary" data-i18n="settings.saveSettings">保存设置</button>
                 </div>
             </div>
         </div>

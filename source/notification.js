@@ -6,12 +6,41 @@ class NotificationWindow {
         this.init();
     }
     
-    init() {
+    async init() {
+        // 等待i18n初始化
+        await this.waitForI18n();
+        this.applyTranslations();
+        
         this.getSoundType();
         this.getWindowId();
         this.bindEvents();
         this.updateDisplay();
         this.playSound();
+    }
+    
+    async waitForI18n() {
+        // 等待i18n对象初始化
+        let attempts = 0;
+        while (!window.i18n && attempts < 50) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
+        }
+        
+        // 等待翻译加载完成
+        if (window.i18n) {
+            while (!window.i18n.translations || Object.keys(window.i18n.translations).length === 0) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+    }
+    
+    applyTranslations() {
+        // 应用所有data-i18n属性
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            element.textContent = window.i18n.t(key);
+        });
     }
     
     getWindowId() {
@@ -37,22 +66,33 @@ class NotificationWindow {
     }
     
     updateDisplay() {
-        const icon = document.getElementById('icon');
         const title = document.getElementById('title');
         const message = document.getElementById('message');
         
         if (this.soundType === 'workCompleteSound') {
-            // icon.textContent = '🎯';
-            title.textContent = '专注时间结束';
-            message.textContent = '恭喜！专注时间已完成，现在可以休息一下了。☕';
+            if (window.i18n) {
+                title.textContent = window.i18n.t('notifications.focusComplete');
+                message.textContent = window.i18n.t('notifications.focusCompleteMessage');
+            } else {
+                title.textContent = '专注时间结束';
+                message.textContent = '恭喜！专注时间已完成，现在可以休息一下了。☕';
+            }
         } else if (this.soundType === 'breakCompleteSound') {
-            // icon.textContent = '☕';
-            title.textContent = '休息时间结束';
-            message.textContent = '休息时间已结束，让我们继续专注工作吧！💪';
+            if (window.i18n) {
+                title.textContent = window.i18n.t('notifications.breakComplete');
+                message.textContent = window.i18n.t('notifications.breakCompleteMessage');
+            } else {
+                title.textContent = '休息时间结束';
+                message.textContent = '休息时间已结束，让我们继续专注工作吧！💪';
+            }
         } else {
-            // icon.textContent = '⏰';
-            title.textContent = '时间提醒';
-            message.textContent = '时间已到！';
+            if (window.i18n) {
+                title.textContent = window.i18n.t('notifications.timeReminder');
+                message.textContent = '时间已到！';
+            } else {
+                title.textContent = '时间提醒';
+                message.textContent = '时间已到！';
+            }
         }
     }
     

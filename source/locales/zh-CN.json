@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "FlowTimer",
+    "tagline": "专注工作，高效生活"
+  },
+  "timer": {
+    "focusTime": "专注时间",
+    "breakTime": "休息时间",
+    "start": "开始",
+    "pause": "暂停",
+    "reset": "重置",
+    "continue": "继续"
+  },
+  "settings": {
+    "title": "设置",
+    "timeSettings": "时间设置",
+    "focusTime": "专注时间",
+    "breakTime": "休息时间",
+    "minutes": "分钟",
+    "seconds": "秒",
+    "languageSettings": "语言设置",
+    "language": "语言",
+    "languageOptions": {
+      "system": "跟随系统",
+      "zh-CN": "中文",
+      "en-US": "English"
+    },
+    "soundSettings": "音效设置",
+    "enableSound": "启用音效",
+    "resetToDefault": "恢复默认设置",
+    "saveSettings": "保存设置"
+  },
+  "notifications": {
+    "focusComplete": "专注时间结束",
+    "focusCompleteMessage": "恭喜！专注时间已完成，现在可以休息一下了。☕",
+    "breakComplete": "休息时间结束",
+    "breakCompleteMessage": "休息时间已结束，让我们继续专注工作吧！💪",
+    "timeReminder": "时间提醒",
+    "continueTimer": "继续计时",
+    "iKnow": "我知道了",
+    "openMainInterface": "请点击浏览器工具栏中的FlowTimer图标打开主界面"
+  },
+  "toast": {
+    "settingsSaved": "设置已保存！",
+    "settingsReset": "设置已重置为默认值",
+    "timerStarted": "计时器已启动",
+    "timerPaused": "计时器已暂停",
+    "timerReset": "计时器已重置",
+    "focusTimeMustBeGreaterThanZero": "专注时间必须大于0",
+    "breakTimeMustBeGreaterThanZero": "休息时间必须大于0",
+    "saveSettingsFailed": "保存设置失败，请重试"
+  }
+}

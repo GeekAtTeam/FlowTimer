@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlowTimer - 时间提醒</title>
+    <script src="js/i18n.js"></script>
     <style>
         * {
             margin: 0;
@@ -109,11 +110,11 @@
 <body>
     <div class="notification-container">
         <img src="icons/icon.png" alt="FlowTimer" class="app-icon">
-        <div class="title" id="title">时间提醒</div>
-        <div class="message" id="message">专注时间已结束</div>
+        <div class="title" id="title" data-i18n="notifications.timeReminder">时间提醒</div>
+        <div class="message" id="message" data-i18n="notifications.focusCompleteMessage">专注时间已结束</div>
         <div class="buttons">
-            <button class="btn btn-primary" id="continueTimer">继续计时</button>
-            <button class="btn" id="closeWindow">我知道了</button>
+            <button class="btn btn-primary" id="continueTimer" data-i18n="notifications.continueTimer">继续计时</button>
+            <button class="btn" id="closeWindow" data-i18n="notifications.iKnow">我知道了</button>
         </div>
     </div>
 

@@ -13,17 +13,112 @@ class BackgroundTimer {
             settings: {
                 workTime: 25 * 60, // 25:00 = 1500秒
                 breakTime: 5 * 60, // 5:00 = 300秒
-                soundEnabled: true // 音效开关，默认开启
+                soundEnabled: true, // 音效开关，默认开启
+                language: 'system' // 语言设置，默认跟随系统
             }
         };
         
         this.countdownInterval = null; // For setInterval
         this.notificationWindowId = null; // 提示窗口ID
         
+        // 语言设置
+        this.locale = this.detectLocale();
+        this.translations = {};
+        
         this.init();
     }
     
+    detectLocale() {
+        // 先检查是否有保存的语言设置
+        const savedLanguage = this.getSavedLanguage();
+        if (savedLanguage && savedLanguage !== 'system') {
+            return savedLanguage;
+        }
+        
+        // 如果设置为跟随系统或没有保存的设置，检测浏览器语言
+        const browserLang = chrome.i18n.getUILanguage();
+        
+        // 如果是中文（包括简体中文、繁体中文等），返回中文
+        if (browserLang.startsWith('zh')) {
+            return 'zh-CN';
+        }
+        
+        // 默认返回英文
+        return 'en-US';
+    }
+    
+    getSavedLanguage() {
+        try {
+            return localStorage.getItem('flowTimer_language') || 'system';
+        } catch (error) {
+            console.error('Failed to get saved language:', error);
+            return 'system';
+        }
+    }
+    
+    saveLanguage(language) {
+        try {
+            localStorage.setItem('flowTimer_language', language);
+            console.log('Background language saved:', language);
+        } catch (error) {
+            console.error('Failed to save language:', error);
+        }
+    }
+    
+    async loadTranslations() {
+        try {
+            const response = await fetch(`locales/${this.locale}.json`);
+            this.translations = await response.json();
+            console.log(`Background loaded translations for ${this.locale}:`, this.translations);
+        } catch (error) {
+            console.error('Failed to load translations:', error);
+            // 如果加载失败，尝试加载英文作为备用
+            if (this.locale !== 'en-US') {
+                try {
+                    const response = await fetch('locales/en-US.json');
+                    this.translations = await response.json();
+                    this.locale = 'en-US';
+                    console.log('Background fallback to English translations');
+                } catch (fallbackError) {
+                    console.error('Failed to load fallback translations:', fallbackError);
+                    this.translations = {};
+                }
+            }
+        }
+    }
+    
+    t(key, params = {}) {
+        // 支持嵌套键，如 'timer.focusTime'
+        const keys = key.split('.');
+        let value = this.translations;
+        
+        for (const k of keys) {
+            if (value && typeof value === 'object' && k in value) {
+                value = value[k];
+            } else {
+                console.warn(`Translation key not found: ${key}`);
+                return key; // 返回键名作为备用
+            }
+        }
+        
+        // 如果找到的是字符串，进行参数替换
+        if (typeof value === 'string') {
+            return this.interpolate(value, params);
+        }
+        
+        return value || key;
+    }
+    
+    interpolate(template, params) {
+        return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+            return params[key] !== undefined ? params[key] : match;
+        });
+    }
+    
     async init() {
+        // 加载翻译
+        await this.loadTranslations();
+        
         // 加载保存的状态
         await this.loadState();
         
@@ -203,6 +298,14 @@ class BackgroundTimer {
     updateSettings(settings) {
         this.timerState.settings = { ...this.timerState.settings, ...settings };
         
+        // 如果更新了语言设置，保存到localStorage
+        if (settings.language !== undefined) {
+            this.saveLanguage(settings.language);
+            // 重新加载翻译
+            this.locale = this.detectLocale();
+            this.loadTranslations();
+        }
+        
         // 如果当前是工作模式，更新时间
         if (this.timerState.currentMode === 'work') {
             this.setMode('work');
@@ -345,7 +448,9 @@ class BackgroundTimer {
         } catch (error) {
             console.log('无法打开主界面:', error);
             // 如果无法打开弹窗，显示提示
-            this.showNotification('FlowTimer', '请点击浏览器工具栏中的FlowTimer图标打开主界面');
+            const title = this.t('app.name');
+            const message = this.t('notifications.openMainInterface') || '请点击浏览器工具栏中的FlowTimer图标打开主界面';
+            this.showNotification(title, message);
         }
     }
     
