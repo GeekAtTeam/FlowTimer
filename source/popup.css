@@ -8,14 +8,12 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #2c2c2c;
     color: #333;
-    width: 350px;
+    width: 300px;
     min-height: 400px;
 }
 
 .container {
     background: white;
-    border-radius: 12px;
-    margin: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     overflow: hidden;
 }
@@ -301,6 +299,13 @@ body {
     flex: 1;
     overflow-y: auto;
     min-height: 0;
+    /* 隐藏滚动条但保持滚动功能 */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.modal-body::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .settings-section {
