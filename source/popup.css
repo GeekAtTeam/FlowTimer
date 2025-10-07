@@ -10,12 +10,19 @@ body {
     color: #333;
     width: 300px;
     min-height: 400px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
     background: white;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -50,7 +57,9 @@ body {
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid #e0e0e0;
+    background: #f8f9fa;
     position: relative;
+    flex-shrink: 0;
 }
 
 .version {
@@ -138,11 +147,16 @@ body {
 
 .main {
     padding: 24px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .timer-display {
     text-align: center;
-    margin-bottom: 24px;
+    margin: 12px 0 24px 0;
+    /* margin-bottom: 24px; */
 }
 
 .time {
@@ -209,13 +223,6 @@ body {
 }
 
 
-.footer {
-    display: flex;
-    justify-content: center;
-    padding: 16px 20px;
-    background: #f8f9fa;
-    border-top: 1px solid #e0e0e0;
-}
 
 
 /* 设置弹窗样式 */
