@@ -42,15 +42,15 @@ class NotificationWindow {
         const message = document.getElementById('message');
         
         if (this.soundType === 'workCompleteSound') {
-            icon.textContent = '🎯';
+            // icon.textContent = '🎯';
             title.textContent = '专注时间结束';
-            message.textContent = '恭喜！专注时间已完成，现在可以休息一下了。';
+            message.textContent = '恭喜！专注时间已完成，现在可以休息一下了。☕';
         } else if (this.soundType === 'breakCompleteSound') {
-            icon.textContent = '☕';
+            // icon.textContent = '☕';
             title.textContent = '休息时间结束';
-            message.textContent = '休息时间已结束，让我们继续专注工作吧！';
+            message.textContent = '休息时间已结束，让我们继续专注工作吧！💪';
         } else {
-            icon.textContent = '⏰';
+            // icon.textContent = '⏰';
             title.textContent = '时间提醒';
             message.textContent = '时间已到！';
         }
